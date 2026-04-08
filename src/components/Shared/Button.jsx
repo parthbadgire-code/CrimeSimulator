@@ -50,7 +50,6 @@ export function Button({
   icon,
   ...props
 }) {
-<<<<<<< Updated upstream
   const base =
     'inline-flex items-center justify-center gap-2 font-bold rounded-xl transition-all duration-200 select-none cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed tracking-wide';
 
@@ -118,15 +117,6 @@ export function Button({
       whileTap={disabled ? {} : { scale: 0.97, y: 0 }}
       className={`${base} ${v.className} ${sizes[size]} ${className}`}
       style={v.style}
-=======
-  const vs = VARIANT_STYLES[variant] || VARIANT_STYLES.primary;
-  const ss = SIZE_STYLES[size] || SIZE_STYLES.md;
-
-  return (
-    <motion.button
-      whileHover={disabled ? {} : { scale: 1.025, y: -1 }}
-      whileTap={disabled ? {} : { scale: 0.975, y: 0 }}
->>>>>>> Stashed changes
       onClick={onClick}
       disabled={disabled}
       className={className}
@@ -142,23 +132,7 @@ export function Button({
       }}
       {...props}
     >
-<<<<<<< Updated upstream
       {icon && <span className="shrink-0">{icon}</span>}
-=======
-      {/* Sheen sweep on hover */}
-      <motion.div
-        initial={{ x: '-100%' }}
-        whileHover={{ x: '200%' }}
-        transition={{ duration: 0.55, ease: 'easeInOut' }}
-        style={{
-          position: 'absolute', top: 0, left: 0,
-          width: '50%', height: '100%',
-          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-          pointerEvents: 'none',
-        }}
-      />
-      {icon && <span style={{ fontSize: '1.1em' }}>{icon}</span>}
->>>>>>> Stashed changes
       {children}
     </motion.button>
   );
