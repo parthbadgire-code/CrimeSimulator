@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { useGameStore } from './gameStore';
 
 export const useAuthStore = create((set, get) => ({
   user: null,
@@ -28,6 +29,7 @@ export const useAuthStore = create((set, get) => ({
         set({ user: session?.user || null });
         if (session?.user) {
           await get().fetchUserStats(session.user.id);
+          useGameStore.getState().fetchSolvedCases(session.user.id);
         }
       }
     } catch (err) {
@@ -44,8 +46,10 @@ export const useAuthStore = create((set, get) => ({
         set({ user: session?.user || null });
         if (session?.user) {
           await get().fetchUserStats(session.user.id);
+          useGameStore.getState().fetchSolvedCases(session.user.id);
         } else {
           set({ userStats: null, loading: false });
+          useGameStore.getState().setSolvedCaseIds([]);
         }
       });
     }
@@ -97,5 +101,6 @@ export const useAuthStore = create((set, get) => ({
   signOut: async () => {
     if (supabase) await supabase.auth.signOut();
     set({ user: null, userStats: null });
+    useGameStore.getState().setSolvedCaseIds([]);
   }
 }));

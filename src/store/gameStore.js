@@ -258,4 +258,23 @@ export const useGameStore = create((set, get) => ({
   setActiveEvidenceTab: (tab) => set({ activeEvidenceTab: tab }),
 
   bootSystem: () => set({ isSystemBooted: true }),
+
+  // ── SOLVED CASES SYNC ───────────────────────────────────
+
+  setSolvedCaseIds: (ids) => set({ solvedCaseIds: ids }),
+
+  fetchSolvedCases: async (userId) => {
+    if (!supabase) return;
+    try {
+      const { data, error } = await supabase
+        .from('solved_cases_log')
+        .select('case_id')
+        .eq('user_id', userId);
+      if (data && !error) {
+        set({ solvedCaseIds: data.map((d) => d.case_id) });
+      }
+    } catch (err) {
+      console.error('Error fetching solved cases:', err);
+    }
+  },
 }));

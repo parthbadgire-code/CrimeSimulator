@@ -13,6 +13,13 @@ const DIFFICULTY_META = {
   Hard:         { color: '#ef4444', bg: 'rgba(239,68,68,0.1)',   border: 'rgba(239,68,68,0.25)',  label: '●●● HARD' },
 };
 
+const SORTED_CASES = [...CASES].sort((a, b) => {
+  const diffOrder = { 'Beginner': 0, 'Intermediate': 1, 'Hard': 2 };
+  const orderA = diffOrder[a.difficulty] ?? 99;
+  const orderB = diffOrder[b.difficulty] ?? 99;
+  return orderA - orderB;
+});
+
 const TICKER_ITEMS = [
   '🔍 NEW CASE UNLOCKED', '⚠ EVIDENCE CLASSIFIED', '🚨 ACTIVE INVESTIGATION',
   '📡 SIGNAL INTERCEPTED', '🔒 FILE ENCRYPTED', '⚖ JUSTICE PENDING',
@@ -66,6 +73,9 @@ export function HomePage() {
   const dragStartX = useRef(0);
   const scrollStartX = useRef(0);
 
+  const totalEvidence = SORTED_CASES.reduce((acc, c) => acc + c.evidence.length, 0);
+  const totalSuspects = SORTED_CASES.reduce((acc, c) => acc + c.suspects.length, 0);
+
   const onMouseDown = (e) => {
     isDragging.current = true;
     dragStartX.current = e.pageX;
@@ -83,14 +93,42 @@ export function HomePage() {
     if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
   };
 
+  const getIsCaseLocked = (caseData) => {
+    if (caseData.difficulty === 'Beginner') return false;
+
+    const beginnerSolved = SORTED_CASES.filter(c => c.difficulty === 'Beginner' && solvedCaseIds.includes(c.id)).length;
+    const totalBeginner = SORTED_CASES.filter(c => c.difficulty === 'Beginner').length;
+    
+    if (beginnerSolved < totalBeginner) return true;
+
+    const intermediateSolved = SORTED_CASES.filter(c => c.difficulty === 'Intermediate' && solvedCaseIds.includes(c.id)).length;
+    const totalIntermediate = SORTED_CASES.filter(c => c.difficulty === 'Intermediate').length;
+
+    if (caseData.difficulty === 'Intermediate') {
+      const index = SORTED_CASES.filter(c => c.difficulty === 'Intermediate').findIndex(c => c.id === caseData.id);
+      return index > intermediateSolved;
+    }
+
+    if (caseData.difficulty === 'Hard') {
+      if (intermediateSolved < totalIntermediate) return true;
+      const index = SORTED_CASES.filter(c => c.difficulty === 'Hard').findIndex(c => c.id === caseData.id);
+      return index > SORTED_CASES.filter(c => c.difficulty === 'Hard' && solvedCaseIds.includes(c.id)).length;
+    }
+
+    return true;
+  };
+
   const handleSelectCase = (caseId) => {
     if (!user) {
       openAuthModal();
       return;
     }
+
+    const targetCase = SORTED_CASES.find((c) => c.id === caseId);
+    if (getIsCaseLocked(targetCase)) return;
+
     if (solvedCaseIds.includes(caseId)) {
-      const caseObj = CASES.find((c) => c.id === caseId);
-      setAlreadySolvedCase(caseObj);
+      setAlreadySolvedCase(targetCase);
       return;
     }
     selectCase(caseId);
@@ -157,7 +195,7 @@ export function HomePage() {
             <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#030508] animate-pulse"></span>
           </div>
           <div>
-            <div className="text-sm font-bold text-white tracking-widest font-display">CRIMEFILES</div>
+            <div className="text-sm font-bold text-white tracking-widest font-crime">ClueConnect</div>
             <div className="text-[9px] text-purple-400/60 font-mono tracking-[0.25em] uppercase">Detective Simulator</div>
           </div>
         </motion.div>
@@ -175,17 +213,17 @@ export function HomePage() {
             whileTap={{ scale: 0.96 }}
             onClick={goLeaderboard}
             style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              padding: '7px 14px', borderRadius: 9,
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '9px 18px', borderRadius: 10,
               background: 'rgba(251,191,36,0.08)',
               border: '1px solid rgba(251,191,36,0.22)',
               color: '#fbbf24', cursor: 'pointer',
-              fontSize: 11, fontWeight: 700,
+              fontSize: 13, fontWeight: 700,
               fontFamily: 'JetBrains Mono, monospace',
               letterSpacing: '0.06em',
             }}
           >
-            <Trophy size={12} />
+            <Trophy size={14} />
             <span className="hidden-sm-down">LEADERBOARD</span>
           </motion.button>
 
@@ -193,9 +231,9 @@ export function HomePage() {
             <span className="status-dot"></span>
             <span>LIVE</span>
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/4 border border-white/8">
-            <Zap size={11} className="text-amber-400" />
-            <span className="text-[10px] text-slate-400 font-semibold">Hackathon Edition</span>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/4 border border-white/8">
+            <Zap size={13} className="text-amber-400" />
+            <span className="text-[11px] text-slate-400 font-semibold">Dev Stakes Edition</span>
           </div>
         </motion.div>
       </header>
@@ -237,7 +275,7 @@ export function HomePage() {
           className="hero-badge"
         >
           <span className="hero-badge-pulse"></span>
-          <span>Interactive Case Files · {CASES.length} Active Investigations</span>
+          <span>Interactive Case Files · {SORTED_CASES.length} Active Investigations</span>
         </motion.div>
 
         {/* Main title */}
@@ -263,14 +301,14 @@ export function HomePage() {
             🔍
           </motion.div>
 
-          <h1 className="font-display text-[72px] md:text-[96px] leading-none tracking-tight mb-4">
+          <h1 className="font-crime text-[72px] md:text-[96px] leading-none tracking-tight mb-4">
             <motion.span
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3, type: 'spring', damping: 18 }}
               className="title-word shimmer-text"
             >
-              CRIME
+              CLUE
             </motion.span>
             <motion.span
               initial={{ opacity: 0, x: 20 }}
@@ -279,15 +317,7 @@ export function HomePage() {
               className="title-word text-glow-white"
               style={{ color: '#fff' }}
             >
-              INVESTIGATION
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55, type: 'spring', damping: 18 }}
-              className="title-word title-simulator"
-            >
-              SIMULATOR
+              CONNECT
             </motion.span>
           </h1>
 
@@ -310,9 +340,9 @@ export function HomePage() {
           className="hero-stats"
         >
           {[
-            { value: '3',     label: 'Cases',          icon: '📁' },
-            { value: '18+',   label: 'Evidence Items', icon: '🔎' },
-            { value: '9',     label: 'Suspects',       icon: '👤' },
+            { value: SORTED_CASES.length.toString(), label: 'Cases',          icon: '📁' },
+            { value: totalEvidence.toString(), label: 'Evidence Items', icon: '🔎' },
+            { value: totalSuspects.toString(), label: 'Suspects',       icon: '👤' },
             { value: '15–20m',label: 'Per Case',       icon: '⏱' },
           ].map((stat, i) => (
             <React.Fragment key={stat.label}>
@@ -377,13 +407,14 @@ export function HomePage() {
           onMouseUp={onMouseUp}
           onMouseLeave={onMouseUp}
         >
-          {CASES.map((c, i) => (
+          {SORTED_CASES.map((c, i) => (
             <PremiumCaseCard
               key={c.id}
               caseData={c}
               index={i}
               isHovered={hoveredCase === c.id}
               isSolved={solvedCaseIds.includes(c.id)}
+              isLocked={getIsCaseLocked(c)}
               onHover={() => setHoveredCase(c.id)}
               onLeave={() => setHoveredCase(null)}
               onSelect={() => handleSelectCase(c.id)}
@@ -515,9 +546,14 @@ function BloodMarks() {
 function AtmosphericBackground() {
   return (
     <div className="atmospheric-bg">
-      <div className="nebula-purple" />
-      <div className="nebula-red" />
-      <div className="nebula-cyan" />
+      {/* User's provided background image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
+        style={{ backgroundImage: 'url("/homepage-bg.jpg")' }} 
+      />
+      {/* Dark overlay to ensure the UI remains highly readable on top of the complex background */}
+      <div className="absolute inset-0 bg-black/65" />
+      
       <div className="scanline-overlay" />
 
       {/* Animated grain layer */}
@@ -531,20 +567,7 @@ function AtmosphericBackground() {
         }}
       />
 
-      {[...Array(6)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full"
-          style={{
-            width: 3 + i * 2, height: 3 + i * 2,
-            left: `${12 + i * 16}%`, top: `${18 + i * 11}%`,
-            background: i % 3 === 0 ? '#8b5cf6' : i % 3 === 1 ? '#06b6d4' : '#ef4444',
-            opacity: 0.15 + i * 0.04,
-          }}
-          animate={{ y: [0, -18, 0], opacity: [0.1, 0.35, 0.1], scale: [1, 1.3, 1] }}
-          transition={{ duration: 4 + i * 0.8, repeat: Infinity, delay: i * 0.7 }}
-        />
-      ))}
+      {/* Removed the floating colored orbs so as not to distract from the image */}
     </div>
   );
 }
@@ -698,7 +721,7 @@ function AlreadySolvedModal({ caseData, onConfirm, onCancel }) {
 }
 
 // ── PREMIUM CASE CARD ─────────────────────────────────────────────────────
-function PremiumCaseCard({ caseData, index, isHovered, isSolved, onHover, onLeave, onSelect }) {
+function PremiumCaseCard({ caseData, index, isHovered, isSolved, isLocked, onHover, onLeave, onSelect }) {
   const meta = DIFFICULTY_META[caseData.difficulty] || DIFFICULTY_META.Hard;
 
   return (
@@ -710,12 +733,17 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, onHover, onLeav
       onMouseLeave={onLeave}
       onClick={onSelect}
       className="case-card-wrapper"
-      style={{ transform: isHovered ? 'translateY(-6px)' : 'translateY(0)', transition: 'transform 0.35s cubic-bezier(0.22,1,0.36,1)' }}
+      style={{ 
+        transform: isHovered && !isLocked ? 'translateY(-6px)' : 'translateY(0)', 
+        transition: 'transform 0.35s cubic-bezier(0.22,1,0.36,1)',
+        opacity: isLocked ? 0.6 : 1,
+        cursor: isLocked ? 'not-allowed' : 'pointer'
+      }}
     >
       {/* Outer gradient border glow */}
       <motion.div
         className="case-card-glow"
-        animate={{ opacity: isHovered ? 1 : 0 }}
+        animate={{ opacity: isHovered && !isLocked ? 1 : 0 }}
         transition={{ duration: 0.4 }}
         style={{ background: `linear-gradient(135deg, ${meta.color}60, transparent, ${meta.color}30)` }}
       />
@@ -724,11 +752,11 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, onHover, onLeav
       <div
         className="case-card"
         style={{
-          boxShadow: isHovered
+          boxShadow: (isHovered && !isLocked)
             ? `0 24px 70px rgba(0,0,0,0.65), 0 0 40px ${meta.color}18, inset 0 1px 0 rgba(255,255,255,0.07)`
             : '0 4px 24px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03)',
-          borderColor: isHovered ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
-          background: isHovered
+          borderColor: (isHovered && !isLocked) ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
+          background: (isHovered && !isLocked)
             ? `linear-gradient(160deg, rgba(18,14,32,0.97) 0%, rgba(10,8,18,0.98) 100%)`
             : undefined,
           transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1)',
@@ -737,7 +765,7 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, onHover, onLeav
         {/* Top accent strip */}
         <motion.div
           className="case-accent-strip"
-          animate={{ opacity: isHovered ? 1 : 0.25, scaleX: isHovered ? 1 : 0.6 }}
+          animate={{ opacity: (isHovered && !isLocked) ? 1 : 0.25, scaleX: (isHovered && !isLocked) ? 1 : 0.6 }}
           transition={{ duration: 0.35 }}
           style={{ background: `linear-gradient(90deg, transparent, ${meta.color}, transparent)`, transformOrigin: 'center' }}
         />
@@ -745,18 +773,28 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, onHover, onLeav
         {/* Hero image banner */}
         <div className="relative w-full h-[180px] overflow-hidden rounded-t-[18px]">
           <motion.div
-            animate={{ scale: isHovered ? 1.06 : 1 }}
+            animate={{ scale: (isHovered && !isLocked) ? 1.06 : 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             style={{
               position: 'absolute', inset: -2,
               backgroundImage: `url(${caseData.coverImage})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
+              filter: isLocked ? 'grayscale(100%) blur(1px)' : 'none'
             }}
           />
           {/* Subtle gradient overlay to blend into the dark card */}
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,8,18,0.1) 0%, rgba(10,8,18,0.98) 100%)' }} />
           
+          {isLocked && (
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px]">
+               <div className="w-12 h-12 rounded-full bg-slate-800/80 border border-slate-700 flex items-center justify-center mb-3">
+                 <Lock size={20} color="#94a3b8" />
+               </div>
+               <span className="text-xs font-bold text-slate-400 font-mono tracking-widest">CLASSIFIED</span>
+            </div>
+          )}
+
           <div className="case-watermark hidden sm:block" style={{ top: 20, right: 20 }}>{String(index + 1).padStart(2, '0')}</div>
 
           <div className="absolute top-5 left-5 right-5 flex justify-between items-center z-10">
@@ -792,10 +830,13 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, onHover, onLeav
             </div>
 
           <motion.div
-            animate={isHovered ? { y: -6, scale: 1.12, rotate: [-2, 2, -1] } : { y: 0, scale: 1, rotate: 0 }}
+            animate={(isHovered && !isLocked) ? { y: -6, scale: 1.12, rotate: [-2, 2, -1] } : { y: 0, scale: 1, rotate: 0 }}
             transition={{ type: 'spring', damping: 12, stiffness: 180 }}
             className="absolute bottom-2 left-6 text-[48px] will-change-transform select-none"
-            style={{ filter: isHovered ? `drop-shadow(0 0 24px ${meta.color}90)` : 'drop-shadow(0 8px 12px rgba(0,0,0,0.8))' }}
+            style={{ 
+              filter: (isHovered && !isLocked) ? `drop-shadow(0 0 24px ${meta.color}90)` : 'drop-shadow(0 8px 12px rgba(0,0,0,0.8))',
+              opacity: isLocked ? 0.4 : 1
+            }}
           >
             {caseData.emoji}
           </motion.div>
@@ -827,19 +868,21 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, onHover, onLeav
 
           {/* CTA */}
           <motion.div
-            animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 6 }}
+            animate={{ opacity: (isHovered && !isLocked) ? 1 : 0, y: (isHovered && !isLocked) ? 0 : 6 }}
             transition={{ duration: 0.25 }}
             className="case-cta-row"
           >
-            <span className="case-cta-text" style={{ color: meta.color }}>
-              {isSolved ? 'Replay Case' : 'Open Case File'}
+            <span className="case-cta-text" style={{ color: isLocked ? '#64748b' : meta.color }}>
+              {isLocked ? 'LOCKED' : isSolved ? 'Replay Case' : 'Open Case File'}
             </span>
             <motion.div
-              animate={{ x: isHovered ? 4 : 0 }}
+              animate={{ x: (isHovered && !isLocked) ? 4 : 0 }}
               className="w-6 h-6 rounded-full flex items-center justify-center"
-              style={{ background: meta.bg, border: `1px solid ${meta.border}` }}
+              style={{ background: isLocked ? 'rgba(255,255,255,0.05)' : meta.bg, border: `1px solid ${isLocked ? 'transparent' : meta.border}` }}
             >
-              {isSolved
+              {isLocked 
+                ? <Lock size={12} style={{ color: '#64748b' }} />
+                : isSolved
                 ? <RefreshCw size={12} style={{ color: meta.color }} />
                 : <ChevronRight size={12} style={{ color: meta.color }} />}
             </motion.div>

@@ -8,6 +8,7 @@ import { GamePage } from './pages/GamePage';
 import { ResultsScreen } from './components/ResultsScreen';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { GuideCharacter } from './components/guide/GuideCharacter';
+import { AudioPlayer } from './components/AudioPlayer';
 
 export default function App() {
   const { gamePhase, isSystemBooted } = useGameStore();
@@ -97,6 +98,7 @@ export default function App() {
         {gamePhase === 'leaderboard' && <LeaderboardPage key="leaderboard" />}
       </AnimatePresence>
       <GuideCharacter />
+      <AudioPlayer />
     </>
   );
 }

@@ -79,8 +79,9 @@
   width: 700px;
   height: 700px;
   border-radius: 50%;
-  border: 1px solid rgba(139, 92, 246, 0.1);
-  box-shadow: 0 0 80px rgba(139, 92, 246, 0.04) inset;
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  box-shadow: 0 0 120px rgba(139, 92, 246, 0.2) inset, 0 0 80px rgba(139, 92, 246, 0.15);
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 65%);
 }
 
 .hero-ring-outer {
@@ -88,7 +89,8 @@
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  border: 1px dashed rgba(139, 92, 246, 0.09);
+  border: 1px dashed rgba(139, 92, 246, 0.3);
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 60%);
 }
 
 .hero-badge-pulse {
@@ -412,6 +414,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: auto;
 }
 
 .case-cta-text {

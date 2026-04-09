@@ -12,6 +12,8 @@ export function ResultsScreen() {
     score,
     goHome,
     selectCase,
+    replayCase,
+    solvedCaseIds,
   } = useGameStore();
 
   // Use a local ref to persist data during unmount/transition
@@ -162,7 +164,19 @@ export function ResultsScreen() {
             <Button variant="ghost" size="md" onClick={goHome} className="flex-1" icon={<ArrowLeft size={14} />}>
               Case Select
             </Button>
-            <Button variant="primary" size="md" onClick={() => selectCase(currentCase.id)} className="flex-1" icon={<RotateCcw size={14} />}>
+            <Button 
+              variant="primary" 
+              size="md" 
+              onClick={() => {
+                if (solvedCaseIds.includes(currentCase.id)) {
+                  replayCase(currentCase.id);
+                } else {
+                  selectCase(currentCase.id);
+                }
+              }} 
+              className="flex-1" 
+              icon={<RotateCcw size={14} />}
+            >
               Play Again
             </Button>
           </div>

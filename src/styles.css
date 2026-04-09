@@ -242,6 +242,8 @@ p {
   flex: 0 0 340px;
   scroll-snap-align: start;
   will-change: transform;
+  display: flex;
+  flex-direction: column;
 }
 
 .case-card {
@@ -253,6 +255,10 @@ p {
   background-color: var(--bg-card);
   transition: all 0.3s ease;
   box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
 }
 
 .case-card:hover {
@@ -266,6 +272,9 @@ p {
 
 .case-card-body {
   padding: 20px 24px; /* Increased padding */
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .case-chips-row {
