@@ -3,7 +3,6 @@
  */
 export function calculateScore({
   evidenceDiscovered = 0,
-  totalEvidence = 0,
   connectionsMade = 0,
   timeRemaining = 0,
   isCorrect = false,

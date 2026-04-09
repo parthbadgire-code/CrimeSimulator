@@ -92,7 +92,12 @@ export function LeaderboardPage() {
   const handleRefresh = () => { fetchLeaderboard(false); };
 
   return (
-    <div className="lb-page">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="lb-page"
+    >
       {/* Atmospheric background */}
       <div className="lb-bg">
         <div className="lb-nebula-gold" />
@@ -110,7 +115,7 @@ export function LeaderboardPage() {
             className="lb-back-btn"
           >
             <ArrowLeft size={14} />
-            <span>Back</span>
+            <span>Case Select</span>
           </motion.button>
         </div>
 
@@ -228,7 +233,7 @@ export function LeaderboardPage() {
           Updated {lastUpdated.toLocaleTimeString()} · {entries.length} detectives
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

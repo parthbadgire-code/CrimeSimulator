@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useTransform, useMotionValue, useSpring } from 'framer-motion';
 import { Shield, Clock, ChevronRight, Zap, Eye, Lock, Star, Search, AlertTriangle, FileText, Trophy, CheckCircle, RefreshCw, X } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';
 import { useAuthStore } from '../store/authStore';
@@ -105,7 +105,12 @@ export function HomePage() {
   const handleReplayCancel = () => setAlreadySolvedCase(null);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#030508]">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="min-h-screen flex flex-col relative overflow-hidden bg-[#030508]"
+    >
 
       {/* ── ALREADY SOLVED MODAL ── */}
       <AlreadySolvedModal
@@ -397,7 +402,7 @@ export function HomePage() {
           </span>
         </footer>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -758,11 +763,6 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, onHover, onLeav
             <span className="difficulty-badge" style={{ color: meta.color, background: 'rgba(0,0,0,0.5)', borderColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)' }}>
               {meta.label}
             </span>
-<<<<<<< Updated upstream
-            <div className="flex items-center gap-1.5 text-[10px] text-white/90 font-mono bg-black/50 px-2.5 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm">
-              <Clock size={10} />
-              {Math.floor(caseData.timeLimit / 60)}m
-=======
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               {isSolved && (
                 <motion.span
@@ -777,19 +777,19 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, onHover, onLeav
                     background: 'rgba(16,185,129,0.1)',
                     border: '1px solid rgba(16,185,129,0.3)',
                     borderRadius: 5, padding: '2px 6px',
+                    backdropFilter: 'blur(8px)',
                   }}
                 >
                   <CheckCircle size={8} />
                   SOLVED
                 </motion.span>
               )}
-              <div className="flex items-center gap-1.5 text-[10px] text-slate-600 font-mono">
+              <div className="flex items-center gap-1.5 text-[10px] text-white/90 font-mono bg-black/50 px-2.5 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm">
                 <Clock size={10} />
                 {Math.floor(caseData.timeLimit / 60)}m
               </div>
->>>>>>> Stashed changes
             </div>
-          </div>
+            </div>
 
           <motion.div
             animate={isHovered ? { y: -6, scale: 1.12, rotate: [-2, 2, -1] } : { y: 0, scale: 1, rotate: 0 }}

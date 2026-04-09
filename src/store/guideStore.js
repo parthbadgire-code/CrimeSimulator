@@ -63,7 +63,7 @@ export const useGuideStore = create((set, get) => ({
 
   startBriefing: (caseData) => {
     if (!caseData) return;
-    const text = `Hey Detective! We've got a hot new case. ${caseData.objective} Head over to ${caseData.location} and piece this puzzle together. Let's get to work!`;
+    const text = `Hey Detective! We've got a hot new case in ${caseData.location || "the area"}. ${caseData.description || ""} Let's piece this puzzle together and find the truth!`;
     set({ isOpen: true, isDormant: false, customMessage: text, isTyping: true });
   },
 
