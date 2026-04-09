@@ -15,6 +15,28 @@ export default function App() {
 
   useEffect(() => {
     useAuthStore.getState().initialize();
+
+    // Global interaction listener to "unlock" audio synthesis for browsers
+    const unlockAudio = () => {
+      const state = useGameStore.getState();
+      // Importing useGuideStore dynamically or via closure
+      import('./store/guideStore').then(m => {
+        m.useGuideStore.getState().unlockAudio();
+      });
+      document.removeEventListener('mousedown', unlockAudio);
+      document.removeEventListener('keydown', unlockAudio);
+      document.removeEventListener('touchstart', unlockAudio);
+    };
+
+    document.addEventListener('mousedown', unlockAudio);
+    document.addEventListener('keydown', unlockAudio);
+    document.addEventListener('touchstart', unlockAudio);
+
+    return () => {
+      document.removeEventListener('mousedown', unlockAudio);
+      document.removeEventListener('keydown', unlockAudio);
+      document.removeEventListener('touchstart', unlockAudio);
+    };
   }, []);
 
   return (

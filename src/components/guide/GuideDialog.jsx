@@ -5,7 +5,16 @@ import { ChevronRight, SkipForward, Bot } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
 
 export const GuideDialog = () => {
-  const { currentStepIndex, nextStep, skipTutorial, setTyping, isTyping, customMessage, isDormant } = useGuideStore();
+  const {
+    currentStepIndex,
+    nextStep,
+    skipTutorial,
+    setTyping,
+    isTyping,
+    customMessage,
+    isDormant,
+    audioUnlocked
+  } = useGuideStore();
   const { gamePhase } = useGameStore();
   const [displayedText, setDisplayedText] = useState('');
 
@@ -57,23 +66,27 @@ export const GuideDialog = () => {
       // Simplest, most reliable pattern to prevent queue-locking
       window.speechSynthesis.cancel();
 
-      const utterance = new SpeechSynthesisUtterance(targetText);
+      // IF audio is not yet unlocked by a user click, we skip speaking but still type.
+      // App.jsx handles the global click which sets audioUnlocked to true.
+      if (audioUnlocked) {
+        const utterance = new SpeechSynthesisUtterance(targetText);
 
-      // Dynamic emotionally-mapped text speed
-      utterance.rate = emotionalRate;
-      utterance.pitch = emotionalPitch;
+        // Dynamic emotionally-mapped text speed
+        utterance.rate = emotionalRate;
+        utterance.pitch = emotionalPitch;
 
-      const voices = window.speechSynthesis.getVoices();
-      if (voices.length > 0) {
-        // Try to find Google's highly-regarded male voice first, then any generic English male
-        let preferredVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google UK English Male'));
-        if (!preferredVoice) preferredVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Male'));
-        if (!preferredVoice) preferredVoice = voices.find(v => v.lang.startsWith('en')); // Fallback
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          // Try to find Google's highly-regarded male voice first, then any generic English male
+          let preferredVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google UK English Male'));
+          if (!preferredVoice) preferredVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Male'));
+          if (!preferredVoice) preferredVoice = voices.find(v => v.lang.startsWith('en')); // Fallback
 
-        if (preferredVoice) utterance.voice = preferredVoice;
+          if (preferredVoice) utterance.voice = preferredVoice;
+        }
+
+        window.speechSynthesis.speak(utterance);
       }
-
-      window.speechSynthesis.speak(utterance);
 
       // Start typing immediately. Relying on API events is too buggy on Mac.
       startTyping();
@@ -90,7 +103,7 @@ export const GuideDialog = () => {
       };
     }
 
-  }, [currentStepIndex, targetText, isDormant]);
+  }, [currentStepIndex, targetText, isDormant, audioUnlocked]);
 
   const handleNext = () => {
     if (window.speechSynthesis) window.speechSynthesis.cancel();

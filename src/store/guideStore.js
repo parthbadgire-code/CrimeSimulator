@@ -35,7 +35,10 @@ export const useGuideStore = create((set, get) => ({
   isTyping: false,
   isDormant: false,
   customMessage: null, 
+  audioUnlocked: false,
   
+  unlockAudio: () => set({ audioUnlocked: true }),
+
   nextStep: () => {
     const { currentStepIndex, customMessage } = get();
     if (customMessage) {
