@@ -567,29 +567,45 @@ function PremiumCaseCard({ caseData, index, isHovered, onHover, onLeave, onSelec
           style={{ background: `linear-gradient(90deg, transparent, ${meta.color}, transparent)`, transformOrigin: 'center' }}
         />
 
-        {/* Case number watermark */}
-        <div className="case-watermark">{String(index + 1).padStart(2, '0')}</div>
+        {/* Hero image banner */}
+        <div className="relative w-full h-[180px] overflow-hidden rounded-t-[18px]">
+          <motion.div
+            animate={{ scale: isHovered ? 1.06 : 1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            style={{
+              position: 'absolute', inset: -2,
+              backgroundImage: `url(${caseData.coverImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+          {/* Subtle gradient overlay to blend into the dark card */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,8,18,0.1) 0%, rgba(10,8,18,0.98) 100%)' }} />
+          
+          <div className="case-watermark hidden sm:block" style={{ top: 20, right: 20 }}>{String(index + 1).padStart(2, '0')}</div>
 
-        {/* Header zone */}
-        <div className="case-card-header">
-          <div className="case-badge-row">
-            <span className="difficulty-badge" style={{ color: meta.color, background: meta.bg, borderColor: meta.border }}>
+          <div className="absolute top-5 left-5 right-5 flex justify-between items-center z-10">
+            <span className="difficulty-badge" style={{ color: meta.color, background: 'rgba(0,0,0,0.5)', borderColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)' }}>
               {meta.label}
             </span>
-            <div className="flex items-center gap-1.5 text-[10px] text-slate-600 font-mono">
+            <div className="flex items-center gap-1.5 text-[10px] text-white/90 font-mono bg-black/50 px-2.5 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm">
               <Clock size={10} />
               {Math.floor(caseData.timeLimit / 60)}m
             </div>
           </div>
 
           <motion.div
-            animate={isHovered ? { y: -6, scale: 1.12, rotate: [-1, 1, -1] } : { y: 0, scale: 1, rotate: 0 }}
+            animate={isHovered ? { y: -6, scale: 1.12, rotate: [-2, 2, -1] } : { y: 0, scale: 1, rotate: 0 }}
             transition={{ type: 'spring', damping: 12, stiffness: 180 }}
-            className="case-emoji"
-            style={{ filter: isHovered ? `drop-shadow(0 0 20px ${meta.color}90)` : 'none' }}
+            className="absolute bottom-2 left-6 text-[48px] will-change-transform select-none"
+            style={{ filter: isHovered ? `drop-shadow(0 0 24px ${meta.color}90)` : 'drop-shadow(0 8px 12px rgba(0,0,0,0.8))' }}
           >
             {caseData.emoji}
           </motion.div>
+        </div>
+
+        {/* Header zone */}
+        <div className="case-card-header" style={{ paddingTop: '16px' }}>
 
           <h3 className="case-title">{caseData.title.toUpperCase()}</h3>
           <p className="case-subtitle">{caseData.subtitle}</p>
