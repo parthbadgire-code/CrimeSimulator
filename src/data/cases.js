@@ -249,6 +249,7 @@ export const CASES = [
     timeLimit: 1500,
     emoji: "💀",
     coverImage: "/cases/case3.png",
+    correctSuspectId: "suspect-3-servant",
 
     // NEW: Triggers the multi-role layout in the Accusation Modal (Truth vs Perception Endgame)
     multiRoleSystem: true,

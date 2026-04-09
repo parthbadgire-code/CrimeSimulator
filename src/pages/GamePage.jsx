@@ -25,7 +25,13 @@ export function GamePage() {
   const canAccuse = discoveredEvidenceIds.length >= 2;
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden" style={{ background: '#04070f' }}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="h-screen flex flex-col overflow-hidden" 
+      style={{ background: '#04070f' }}
+    >
       <TimerMount />
 
       {/* ── COMMAND CENTER HEADER ── */}
@@ -45,7 +51,7 @@ export function GamePage() {
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-200 border border-white/5 hover:border-white/12 hover:bg-white/4 transition-all"
           >
             <ArrowLeft size={13} />
-            <span className="game-exit-text">Exit</span>
+            <span className="game-exit-text">Case Select</span>
           </motion.button>
 
           <div className="game-header-divider" />
@@ -140,6 +146,6 @@ export function GamePage() {
 
       <CaseOverview />
       <DecisionModal />
-    </div>
+    </motion.div>
   );
 }

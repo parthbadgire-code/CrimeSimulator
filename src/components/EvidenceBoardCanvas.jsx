@@ -9,10 +9,8 @@ export function EvidenceBoardCanvas() {
     currentCase,
     boardItems,
     connections,
-    discoveredEvidenceIds,
     updateBoardItemPosition,
     removeFromBoard,
-    addEvidenceToBoard,
   } = useGameStore();
 
   const {
@@ -31,14 +29,14 @@ export function EvidenceBoardCanvas() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
 
-  const getBoardPos = (clientX, clientY) => {
+  const getBoardPos = useCallback((clientX, clientY) => {
     const rect = boardRef.current?.getBoundingClientRect();
     if (!rect) return { x: 0, y: 0 };
     return {
       x: (clientX - rect.left) / zoom,
       y: (clientY - rect.top)  / zoom,
     };
-  };
+  }, [zoom]);
 
   const onMouseMove = useCallback(
     (e) => {
@@ -53,7 +51,7 @@ export function EvidenceBoardCanvas() {
         );
       }
     },
-    [draggingId, dragOffset, zoom]
+    [draggingId, dragOffset, getBoardPos, updateBoardItemPosition]
   );
 
   const onMouseUp = useCallback(() => {

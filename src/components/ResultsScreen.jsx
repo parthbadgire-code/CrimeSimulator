@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Clock, Search, Link, Star, ArrowLeft, RotateCcw } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';
@@ -14,26 +14,47 @@ export function ResultsScreen() {
     selectCase,
   } = useGameStore();
 
-  if (!currentCase || !scoreBreakdown) return null;
+  // Use a local ref to persist data during unmount/transition
+  const lastData = React.useRef({ currentCase, scoreBreakdown, score });
+  if (currentCase && scoreBreakdown) {
+    lastData.current = { currentCase, scoreBreakdown, score };
+  }
 
-  const accused = currentCase.suspects.find((s) => s.id === accusedSuspectId);
-  const correct = currentCase.suspects.find((s) => s.id === currentCase.correctSuspectId);
-  const isCorrect = scoreBreakdown.isCorrect;
+  const activeCase = currentCase || lastData.current.currentCase;
+  const activeBreakdown = scoreBreakdown || lastData.current.scoreBreakdown;
+  const activeScore = score !== 0 ? score : lastData.current.score;
 
-  const grade = getGrade(score, isCorrect);
+  if (!activeCase || !activeBreakdown) return null;
+
+  const accused = activeCase.suspects.find((s) => s.id === accusedSuspectId);
+  const correct = activeCase.suspects.find((s) => s.id === activeCase.correctSuspectId);
+  const isCorrect = activeBreakdown.isCorrect;
+
+  const grade = getGrade(activeScore, isCorrect);
+
+  const particles = useMemo(() => 
+    Array.from({ length: 8 }).map(() => ({
+      left: `${20 + Math.random() * 60}%`,
+      top: `${20 + Math.random() * 60}%`,
+    })), [isCorrect]);
 
   return (
-    <div className="results-min-h-screen">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="results-min-h-screen"
+    >
       <div className={`results-bg ${isCorrect ? 'correct' : 'wrong'}`} />
 
       <div className="results-particles">
-        {Array.from({ length: 8 }).map((_, i) => (
+        {particles.map((p, i) => (
           <motion.div
             key={i}
             className={`particle-dot ${isCorrect ? 'particle-correct' : 'particle-wrong'}`}
             style={{
-              left: `${20 + Math.random() * 60}%`,
-              top:  `${20 + Math.random() * 60}%`,
+              left: p.left,
+              top:  p.top,
             }}
             animate={{
               y: [0, -100, -200],
@@ -92,7 +113,7 @@ export function ResultsScreen() {
                 {grade.label}
               </div>
               <div>
-                <div className="results-score-val">{score.toLocaleString()}</div>
+                <div className="results-score-val">{activeScore.toLocaleString()}</div>
                 <div className="results-score-lbl">Total Score</div>
               </div>
             </div>
@@ -100,13 +121,13 @@ export function ResultsScreen() {
           </div>
 
           <div className="results-breakdown">
-            <ScoreLine icon={<Search size={13} />} label="Evidence Discovered" value={scoreBreakdown.evidencePoints} color="purple" />
-            <ScoreLine icon={<Link size={13} />}   label="Connections Made"    value={scoreBreakdown.connectionPoints} color="cyan" />
-            <ScoreLine icon={<Clock size={13} />}  label="Time Bonus"          value={scoreBreakdown.timeBonus} color="amber" />
-            <ScoreLine icon={<Star size={13} />}   label="Accuracy Bonus"      value={scoreBreakdown.accuracyBonus} color={isCorrect ? 'emerald' : 'red'} />
+            <ScoreLine icon={<Search size={13} />} label="Evidence Discovered" value={activeBreakdown.evidencePoints} color="purple" />
+            <ScoreLine icon={<Link size={13} />}   label="Connections Made"    value={activeBreakdown.connectionPoints} color="cyan" />
+            <ScoreLine icon={<Clock size={13} />}  label="Time Bonus"          value={activeBreakdown.timeBonus} color="amber" />
+            <ScoreLine icon={<Star size={13} />}   label="Accuracy Bonus"      value={activeBreakdown.accuracyBonus} color={isCorrect ? 'emerald' : 'red'} />
             <div className="results-final-score">
               <span className="results-final-lbl">Final Score</span>
-              <span className="results-final-val">{score.toLocaleString()}</span>
+              <span className="results-final-val">{activeScore.toLocaleString()}</span>
             </div>
           </div>
 
@@ -147,7 +168,7 @@ export function ResultsScreen() {
           </div>
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
 

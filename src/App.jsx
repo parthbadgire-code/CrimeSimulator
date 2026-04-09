@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from './store/gameStore';
 import { useAuthStore } from './store/authStore';
 import { Auth } from './components/Auth';

@@ -42,7 +42,10 @@ export const useGameStore = create((set, get) => ({
 
   // ── NAVIGATION ──────────────────────────────────────────
 
-  goHome: () => set((state) => ({ ...INITIAL_STATE, solvedCaseIds: state.solvedCaseIds })),
+  goHome: () => {
+    window.scrollTo(0, 0);
+    set((state) => ({ ...INITIAL_STATE, solvedCaseIds: state.solvedCaseIds }));
+  },
   goLeaderboard: () => set((state) => ({ ...INITIAL_STATE, solvedCaseIds: state.solvedCaseIds, gamePhase: 'leaderboard' })),
 
   selectCase: (caseId) => {
