@@ -181,7 +181,7 @@ export function HomePage() {
       </div>
 
       {/* ── HEADER ── */}
-      <header className="relative z-20 flex items-center justify-between px-8 py-5">
+      <header className="relative z-20 flex items-center justify-between px-4 py-4 md:px-8 md:py-5">
         <motion.div
           initial={{ opacity: 0, x: -24 }}
           animate={{ opacity: 1, x: 0 }}
@@ -207,6 +207,25 @@ export function HomePage() {
           style={{ display: 'flex', alignItems: 'center', gap: '16px' }}
         >
           <ProfileBadge />
+
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => document.getElementById('about-us')?.scrollIntoView({ behavior: 'smooth' })}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '9px 18px', borderRadius: 10,
+              background: 'rgba(244,63,94,0.08)',
+              border: '1px solid rgba(244,63,94,0.22)',
+              color: '#f43f5e', cursor: 'pointer',
+              fontSize: 13, fontWeight: 700,
+              fontFamily: 'JetBrains Mono, monospace',
+              letterSpacing: '0.06em',
+            }}
+          >
+            <Search size={14} />
+            <span className="hidden-sm-down">ABOUT US</span>
+          </motion.button>
 
           <motion.button
             whileHover={{ scale: 1.04 }}
@@ -422,6 +441,9 @@ export function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ── ABOUT US ── */}
+      <AboutUsSection />
 
       {/* ── FOOTER ── */}
       <div className="footer-wrap">
@@ -909,4 +931,129 @@ function InfoChip({ icon, value, label, color }) {
       <span className="text-[9px] text-slate-700 hidden sm:block">{label}</span>
     </div>
   );
+}
+
+// ── THE REAL DETECTIVES BEHIND (ABOUT US) ────────────────────────────────
+const TEAM_MEMBERS = [
+  {
+    id: "FILE: 001",
+    name: "Parth Badgire",
+    role: "LEAD INVESTIGATOR",
+    desc: "Mastermind behind the Crime Simulator. Specializes in front-end forensics, react architecture, and crafting immersive digital experiences.",
+    tags: ["REACT", "BACKEND", "UI/UX"],
+    img: "https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=400&auto=format&fit=crop",
+    theme: { text: "text-rose-500", bgOverlay: "bg-rose-500/[0.02]", mixBlend: "bg-rose-500/20" },
+    icon: <FileText size={180} />
+  },
+  {
+    id: "FILE: 002",
+    name: "Advait Deshpande",
+    role: "INVESTIGATOR",
+    desc: "Crucial operative uncovering data trails and structuring logic for dynamic case files.",
+    tags: ["DATA", "LOGIC", "BUG FIXES"],
+    img: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=400&auto=format&fit=crop",
+    theme: { text: "text-amber-500", bgOverlay: "bg-amber-500/[0.02]", mixBlend: "bg-amber-500/20" },
+    icon: <AlertTriangle size={180} />
+  },
+  {
+    id: "FILE: 003",
+    name: "Samruddhi More",
+    role: "INVESTIGATOR",
+    desc: "Key suspect analyst. Designs interrogation flows and uncovers hidden narrative threads.",
+    tags: ["NARRATIVE", "DESIGN", "QA"],
+    img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop",
+    theme: { text: "text-cyan-500", bgOverlay: "bg-cyan-500/[0.02]", mixBlend: "bg-cyan-500/20" },
+    icon: <Search size={180} />
+  },
+  {
+    id: "FILE: 004",
+    name: "Tisha Sarkar",
+    role: "INVESTIGATOR",
+    desc: "Forensics expert bridging the gap between gameplay mechanics and visual storytelling.",
+    tags: ["VISUALS", "UX", "STORY"],
+    img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop",
+    theme: { text: "text-purple-500", bgOverlay: "bg-purple-500/[0.02]", mixBlend: "bg-purple-500/20" },
+    icon: <Eye size={180} />
+  },
+  {
+    id: "FILE: 005",
+    name: "Aary Garge",
+    role: "INVESTIGATOR",
+    desc: "Tactical operations and codebase security. Ensures the syndicate's evidence remains uncompromised.",
+    tags: ["SECURITY", "SYSTEMS", "TESTING"],
+    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop",
+    theme: { text: "text-emerald-500", bgOverlay: "bg-emerald-500/[0.02]", mixBlend: "bg-emerald-500/20" },
+    icon: <Shield size={180} />
+  }
+];
+
+function AboutUsSection() {
+  return (
+    <section id="about-us" className="relative z-10 py-24 px-6 w-full flex flex-col items-center border-t border-white/5 bg-gradient-to-b from-transparent to-[#050308]">
+      <motion.div
+         initial={{ opacity: 0 }}
+         whileInView={{ opacity: 1 }}
+         viewport={{ once: true }}
+         className="w-full max-w-6xl"
+      >
+        <div className="flex items-center justify-center gap-4 mb-12">
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent to-rose-500/20" />
+          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-rose-500/20 bg-rose-500/5">
+            <Search size={12} className="text-rose-400" />
+            <span className="text-[11px] font-mono text-rose-400 tracking-widest uppercase">About Us</span>
+          </div>
+          <div className="flex-1 h-px bg-gradient-to-l from-transparent to-rose-500/20" />
+        </div>
+
+        <div className="text-center mb-20 relative">
+          <h2 className="font-crime text-[52px] md:text-[72px] leading-[0.9] tracking-tight mb-4 text-white">
+            THE REAL <span style={{ color: '#ef4444', textShadow: '0 0 20px rgba(239,68,68,0.5)' }}>DETECTIVES</span> BEHIND
+          </h2>
+          <p className="text-slate-400 font-mono text-[11px] tracking-[0.2em] uppercase max-w-xl mx-auto mt-6">
+            The architects of ClueConnect. Designing the impossible, one case at a time.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+           {TEAM_MEMBERS.map((member, i) => (
+             <motion.div 
+               key={member.name}
+               initial={{ opacity: 0, y: 30 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               transition={{ delay: i * 0.1 }}
+               whileHover={{ y: -5 }}
+               className={`relative overflow-hidden rounded-[20px] border border-white/[0.05] bg-gradient-to-br from-black/50 to-transparent p-5 sm:p-6 backdrop-blur-md ${i === 0 ? "md:col-span-2 lg:col-span-4 lg:max-w-3xl lg:mx-auto mb-4" : "col-span-1 md:col-span-1 lg:col-span-2"}`}
+               style={{ boxShadow: '0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)' }}
+             >
+               <div className="absolute top-0 right-0 p-4 opacity-[0.03] pointer-events-none">
+                  {member.icon}
+               </div>
+               <div className={`absolute inset-0 ${member.theme.bgOverlay}`} />
+               
+               <div className="relative flex items-start">
+                 <div className="flex-1 flex flex-col h-full">
+                   <div className="flex justify-between items-center mb-2">
+                     <div className={`text-[10px] sm:text-[11px] ${member.theme.text} font-mono tracking-[0.15em] font-bold leading-tight`}>{member.role}</div>
+                     <span className="text-[9px] font-mono tracking-widest text-white opacity-40">{member.id}</span>
+                   </div>
+                   <h3 className="text-2xl sm:text-3xl font-crime text-white tracking-wide mb-3 leading-none whitespace-nowrap">{member.name}</h3>
+                   <p className="text-[11px] sm:text-xs text-slate-400 font-mono leading-relaxed mb-4">
+                     {member.desc}
+                   </p>
+                   <div className="flex flex-wrap gap-2 mt-auto">
+                      {member.tags.map(tag => (
+                        <span key={tag} className="text-[8px] font-mono tracking-wider px-1.5 py-1 rounded bg-white/[0.04] border border-white/[0.05] text-slate-300">
+                          {tag}
+                        </span>
+                      ))}
+                   </div>
+                 </div>
+               </div>
+             </motion.div>
+           ))}
+        </div>
+      </motion.div>
+    </section>
+  )
 }
