@@ -247,3 +247,10 @@ body::after {
 .font-serif { font-family: 'Crimson Pro', Georgia, serif; }
 .font-display { font-family: 'Bebas Neue', 'Impact', sans-serif; letter-spacing: 0.05em; }
 .font-crime { font-family: 'Special Elite', monospace; letter-spacing: 0.02em; }
+
+/* ── Mobile Utilities ─────────────────────────────────── */
+@media (max-width: 768px) {
+  .hidden-sm-down {
+    display: none !important;
+  }
+}
