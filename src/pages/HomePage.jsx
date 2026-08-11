@@ -278,12 +278,12 @@ export function HomePage() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
           className="hero-title"
         >
-          <h1 className="font-crime text-[72px] md:text-[96px] leading-none tracking-tight mb-4">
+          <h1 className="text-[72px] md:text-[96px] leading-none tracking-tight mb-4 flex gap-4">
             <motion.span
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3, type: 'spring', damping: 18 }}
-              className="title-word shimmer-text"
+              style={{ fontFamily: "'Special Elite', cursive", color: '#fff' }}
             >
               CLUE
             </motion.span>
@@ -291,8 +291,7 @@ export function HomePage() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, type: 'spring', damping: 18 }}
-              className="title-word text-glow-white"
-              style={{ color: '#fff' }}
+              style={{ fontFamily: "'JetBrains Mono', monospace", color: '#8b5cf6' }}
             >
               CONNECT
             </motion.span>
@@ -686,7 +685,7 @@ function AlreadySolvedModal({ caseData, onConfirm, onCancel }) {
   );
 }
 
-// ── PREMIUM CASE CARD ─────────────────────────────────────────────────────
+// ── PREMIUM CASE CARD (DOSSIER STYLE) ─────────────────────────────────────────────────────
 function PremiumCaseCard({ caseData, index, isHovered, isSolved, isLocked, onHover, onLeave, onSelect }) {
   const meta = DIFFICULTY_META[caseData.difficulty] || DIFFICULTY_META.Hard;
 
@@ -706,59 +705,68 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, isLocked, onHov
         cursor: isLocked ? 'not-allowed' : 'pointer'
       }}
     >
-      {/* Glow removed for cleaner aesthetic */}
-
-      {/* Card body */}
+      {/* Dossier Body */}
       <div
-        className="case-card"
+        className="case-card relative rounded-sm overflow-hidden"
         style={{
           boxShadow: (isHovered && !isLocked)
             ? '0 12px 32px rgba(0,0,0,0.6)'
             : '0 4px 12px rgba(0,0,0,0.3)',
-          borderColor: (isHovered && !isLocked) ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.06)',
-          background: 'rgba(12, 12, 14, 0.9)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(15, 15, 17, 0.95)',
           transition: 'all 0.2s ease',
         }}
       >
-        {/* Top accent strip */}
-        <motion.div
-          className="case-accent-strip"
-          animate={{ opacity: (isHovered && !isLocked) ? 1 : 0.25, scaleX: (isHovered && !isLocked) ? 1 : 0.6 }}
-          transition={{ duration: 0.35 }}
-          style={{ background: `linear-gradient(90deg, transparent, ${meta.color}, transparent)`, transformOrigin: 'center' }}
-        />
+        {/* Dossier Left Color Strip */}
+        <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: '4px', background: meta.color, zIndex: 10 }} />
+
+        {/* Blueprint Grid Background */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0,
+          backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
+          backgroundSize: '20px 20px', pointerEvents: 'none'
+        }} />
+
+        {/* Top Tab Area */}
+        <div className="flex justify-between items-center px-4 py-2 border-b border-white/5 relative z-10 bg-black/40">
+          <div className="flex flex-col">
+             <span className="text-[9px] font-mono tracking-widest text-slate-500">FILE ID</span>
+             <span className="text-xs font-mono tracking-wider" style={{ color: meta.color }}>{caseData.id.toUpperCase()}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-mono tracking-widest px-2 py-0.5 rounded-sm" style={{ border: `1px solid ${meta.color}50`, color: meta.color }}>
+              {meta.label}
+            </span>
+          </div>
+        </div>
 
         {/* Hero image banner */}
-        <div className="relative w-full h-[180px] overflow-hidden rounded-t-[18px]">
+        <div className="relative w-full h-[140px] overflow-hidden ml-1">
           <motion.div
-            animate={{ scale: (isHovered && !isLocked) ? 1.06 : 1 }}
+            animate={{ scale: (isHovered && !isLocked) ? 1.05 : 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             style={{
-              position: 'absolute', inset: -2,
+              position: 'absolute', inset: 0,
               backgroundImage: `url(${caseData.coverImage})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              filter: isLocked ? 'grayscale(100%) blur(1px)' : 'none'
+              filter: isLocked ? 'grayscale(100%) blur(1px)' : 'grayscale(30%) contrast(110%)'
             }}
           />
-          {/* Subtle gradient overlay to blend into the dark card */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,8,18,0.1) 0%, rgba(10,8,18,0.98) 100%)' }} />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f11] via-transparent to-transparent" />
           
-          {isLocked && (
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px]">
-               <div className="w-12 h-12 rounded-full bg-slate-800/80 border border-slate-700 flex items-center justify-center mb-3">
-                 <Lock size={20} color="#94a3b8" />
-               </div>
-               <span className="text-xs font-bold text-slate-400 font-mono tracking-widest">CLASSIFIED</span>
-            </div>
-          )}
+          {/* Decorative Barcode / Tech Info */}
+          <div className="absolute bottom-2 right-3 flex flex-col items-end gap-1">
+            <div className="text-[8px] font-mono text-white/50 tracking-widest">LOC: {caseData.location.toUpperCase()}</div>
+            <div className="h-4 w-16 opacity-40" style={{ backgroundImage: 'repeating-linear-gradient(90deg, #fff, #fff 1px, transparent 1px, transparent 3px)', backgroundSize: '100% 100%' }} />
+          </div>
 
-          <div className="case-watermark hidden sm:block" style={{ top: 20, right: 20 }}>{String(index + 1).padStart(2, '0')}</div>
+          {/* TOP SECRET Stamp */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 border-2 border-red-500/30 text-red-500/30 font-bold text-2xl px-2 py-0.5 tracking-widest pointer-events-none select-none z-10 mix-blend-screen" style={{ fontFamily: "'Special Elite', cursive" }}>
+            {isLocked ? "CLASSIFIED" : "CONFIDENTIAL"}
+          </div>
 
-          <div className="absolute top-5 left-5 right-5 flex justify-between items-center z-10">
-            <span className="difficulty-badge" style={{ color: meta.color, background: 'rgba(0,0,0,0.5)', borderColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)' }}>
-              {meta.label}
-            </span>
+          <div className="absolute top-3 left-3 flex justify-between items-center z-10">
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               {isSolved && (
                 <motion.span
@@ -770,9 +778,9 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, isLocked, onHov
                     fontSize: 9, fontFamily: 'JetBrains Mono, monospace',
                     fontWeight: 700, letterSpacing: '0.12em',
                     color: '#10b981',
-                    background: 'rgba(16,185,129,0.1)',
-                    border: '1px solid rgba(16,185,129,0.3)',
-                    borderRadius: 5, padding: '2px 6px',
+                    background: 'rgba(16,185,129,0.15)',
+                    border: '1px solid rgba(16,185,129,0.4)',
+                    borderRadius: 2, padding: '2px 6px',
                     backdropFilter: 'blur(8px)',
                   }}
                 >
@@ -780,80 +788,46 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, isLocked, onHov
                   SOLVED
                 </motion.span>
               )}
-              <div className="flex items-center gap-1.5 text-[10px] text-white/90 font-mono bg-black/50 px-2.5 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm">
-                <Clock size={10} />
-                {Math.floor(caseData.timeLimit / 60)}m
-              </div>
             </div>
-            </div>
-
-          <motion.div
-            animate={(isHovered && !isLocked) ? { y: -6, scale: 1.12, rotate: [-2, 2, -1] } : { y: 0, scale: 1, rotate: 0 }}
-            transition={{ type: 'spring', damping: 12, stiffness: 180 }}
-            className="absolute bottom-2 left-6 text-[48px] will-change-transform select-none"
-            style={{ 
-              filter: (isHovered && !isLocked) ? `drop-shadow(0 0 24px ${meta.color}90)` : 'drop-shadow(0 8px 12px rgba(0,0,0,0.8))',
-              opacity: isLocked ? 0.4 : 1
-            }}
-          >
-            {caseData.emoji}
-          </motion.div>
-        </div>
-
-        {/* Header zone */}
-        <div className="case-card-header" style={{ paddingTop: '16px' }}>
-
-          <h3 className="case-title">{caseData.title.toUpperCase()}</h3>
-          <p className="case-subtitle">{caseData.subtitle}</p>
-
-          <div className="location-chip">
-            <span>📍</span>{caseData.location}
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="mx-5 h-px bg-white/5" />
+        {/* Header zone */}
+        <div className="px-5 pt-3 pb-2 relative z-10 ml-1">
+          <h3 className="text-xl font-bold tracking-tight text-white/90 mb-1 leading-tight">{caseData.title.toUpperCase()}</h3>
+          <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">{caseData.description}</p>
+        </div>
 
         {/* Body */}
-        <div className="case-card-body">
-          <p className="case-description">{caseData.description}</p>
-
-          <div className="case-chips-row">
-            <InfoChip icon="🧩" value={caseData.suspects.length} label="Suspects" color={meta.color} />
+        <div className="px-5 pb-4 relative z-10 ml-1">
+          <div className="flex gap-2 mt-3">
+            <InfoChip icon="👤" value={caseData.suspects.length} label="Suspects" color={meta.color} />
             <InfoChip icon="🔎" value={caseData.evidence.length} label="Evidence" color={meta.color} />
-            <InfoChip icon="📍" value={caseData.timeline.length} label="Events" color={meta.color} />
+            <InfoChip icon="⏱" value={`${Math.floor(caseData.timeLimit / 60)}m`} label="Limit" color={meta.color} />
           </div>
 
           {/* CTA */}
           <motion.div
-            animate={{ opacity: (isHovered && !isLocked) ? 1 : 0, y: (isHovered && !isLocked) ? 0 : 6 }}
+            animate={{ opacity: (isHovered && !isLocked) ? 1 : 0.6 }}
             transition={{ duration: 0.25 }}
-            className="case-cta-row"
+            className="mt-4 flex items-center justify-between pt-3 border-t border-white/5"
           >
-            <span className="case-cta-text" style={{ color: isLocked ? '#64748b' : meta.color }}>
-              {isLocked ? 'LOCKED' : isSolved ? 'Replay Case' : 'Open Case File'}
+            <span className="text-[10px] font-mono tracking-widest" style={{ color: isLocked ? '#64748b' : meta.color }}>
+              {isLocked ? 'ACCESS DENIED' : isSolved ? 'REOPEN FILE' : 'INITIATE PROTOCOL'}
             </span>
             <motion.div
               animate={{ x: (isHovered && !isLocked) ? 4 : 0 }}
-              className="w-6 h-6 rounded-full flex items-center justify-center"
-              style={{ background: isLocked ? 'rgba(255,255,255,0.05)' : meta.bg, border: `1px solid ${isLocked ? 'transparent' : meta.border}` }}
+              className="w-5 h-5 flex items-center justify-center"
+              style={{ background: isLocked ? 'rgba(255,255,255,0.05)' : `${meta.color}20` }}
             >
               {isLocked 
-                ? <Lock size={12} style={{ color: '#64748b' }} />
+                ? <Lock size={10} style={{ color: '#64748b' }} />
                 : isSolved
-                ? <RefreshCw size={12} style={{ color: meta.color }} />
-                : <ChevronRight size={12} style={{ color: meta.color }} />}
+                ? <RefreshCw size={10} style={{ color: meta.color }} />
+                : <ChevronRight size={10} style={{ color: meta.color }} />}
             </motion.div>
           </motion.div>
         </div>
-
-        {/* Bottom hover line */}
-        <motion.div
-          animate={{ scaleX: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.35 }}
-          className="case-hover-line"
-          style={{ background: `linear-gradient(90deg, transparent, ${meta.color}, transparent)`, transformOrigin: 'center' }}
-        />
       </div>
     </motion.div>
   );

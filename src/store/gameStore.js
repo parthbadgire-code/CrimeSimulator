@@ -105,6 +105,10 @@ export const useGameStore = create((set, get) => ({
     set({ gamePhase: 'playing', showBriefing: false, timerRunning: true });
   },
 
+  cancelBriefing: () => {
+    set({ gamePhase: 'idle', showBriefing: false, currentCase: null, currentCaseId: null });
+  },
+
   openAccuseModal: () => set({ gamePhase: 'accusing' }),
   closeAccuseModal: () => set({ gamePhase: 'playing' }),
 

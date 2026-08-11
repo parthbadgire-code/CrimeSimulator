@@ -5,7 +5,7 @@ import { Button } from './Shared/Button';
 import { useGameStore } from '../store/gameStore';
 
 export function CaseOverview() {
-  const { currentCase, startGame, showBriefing } = useGameStore();
+  const { currentCase, startGame, showBriefing, cancelBriefing } = useGameStore();
   if (!showBriefing || !currentCase) return null;
 
   return (
@@ -56,6 +56,12 @@ export function CaseOverview() {
                 }}>
                   CLASSIFIED
                 </div>
+                <button 
+                  onClick={cancelBriefing}
+                  className="hover:bg-white/10 p-1 rounded transition-colors text-slate-400 hover:text-white"
+                >
+                  <X size={16} />
+                </button>
               </div>
             </div>
 
