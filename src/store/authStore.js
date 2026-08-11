@@ -68,7 +68,23 @@ export const useAuthStore = create((set, get) => ({
         console.error('Error fetching user stats:', error);
       }
       
-      set({ userStats: data || null, loading: false });
+      let finalData = data;
+      
+      // Patch Google OAuth names if username is missing
+      const { user } = get();
+      if (data && !data.username && user?.user_metadata?.full_name) {
+        const { data: updatedData } = await supabase
+          .from('user_stats')
+          .update({ username: user.user_metadata.full_name })
+          .eq('id', userId)
+          .select()
+          .single();
+        if (updatedData) {
+          finalData = updatedData;
+        }
+      }
+
+      set({ userStats: finalData || null, loading: false });
     } catch (err) {
       console.error('Error fetching user stats:', err);
       set({ loading: false });
