@@ -260,32 +260,6 @@ export function HomePage() {
       {/* ── HERO SECTION ── */}
       <section ref={heroRef} className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 pt-8 pb-12 hero-grid">
 
-        {/* Decorative rings — now more visible */}
-        <div className="hero-rings">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-            className="hero-ring-inner"
-          />
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
-            className="hero-ring-outer"
-          />
-          {/* Extra inner ring */}
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-            style={{
-              position: 'absolute',
-              width: 280,
-              height: 280,
-              borderRadius: '50%',
-              border: '1px dashed rgba(239,68,68,0.07)',
-            }}
-          />
-        </div>
-
         {/* Case file badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -304,22 +278,6 @@ export function HomePage() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
           className="hero-title"
         >
-          {/* Glowing magnifier emoji */}
-          <motion.div
-            animate={{
-              y: [0, -8, 0],
-              filter: [
-                'drop-shadow(0 0 16px rgba(139,92,246,0.3))',
-                'drop-shadow(0 0 40px rgba(139,92,246,0.9))',
-                'drop-shadow(0 0 16px rgba(139,92,246,0.3))',
-              ],
-            }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="hero-emoji"
-          >
-            🔍
-          </motion.div>
-
           <h1 className="font-crime text-[72px] md:text-[96px] leading-none tracking-tight mb-4">
             <motion.span
               initial={{ opacity: 0, x: -20 }}
@@ -575,21 +533,7 @@ function AtmosphericBackground() {
       />
       {/* Dark overlay to ensure the UI remains highly readable on top of the complex background */}
       <div className="absolute inset-0 bg-black/65" />
-      
-      <div className="scanline-overlay" />
 
-      {/* Animated grain layer */}
-      <motion.div
-        animate={{ backgroundPosition: ['0% 0%', '100% 100%'] }}
-        transition={{ duration: 8, repeat: Infinity, repeatType: 'mirror', ease: 'linear' }}
-        style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.04\'/%3E%3C/svg%3E")',
-          opacity: 0.4,
-        }}
-      />
-
-      {/* Removed the floating colored orbs so as not to distract from the image */}
     </div>
   );
 }
@@ -762,26 +706,18 @@ function PremiumCaseCard({ caseData, index, isHovered, isSolved, isLocked, onHov
         cursor: isLocked ? 'not-allowed' : 'pointer'
       }}
     >
-      {/* Outer gradient border glow */}
-      <motion.div
-        className="case-card-glow"
-        animate={{ opacity: isHovered && !isLocked ? 1 : 0 }}
-        transition={{ duration: 0.4 }}
-        style={{ background: `linear-gradient(135deg, ${meta.color}60, transparent, ${meta.color}30)` }}
-      />
+      {/* Glow removed for cleaner aesthetic */}
 
       {/* Card body */}
       <div
         className="case-card"
         style={{
           boxShadow: (isHovered && !isLocked)
-            ? `0 24px 70px rgba(0,0,0,0.65), 0 0 40px ${meta.color}18, inset 0 1px 0 rgba(255,255,255,0.07)`
-            : '0 4px 24px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03)',
-          borderColor: (isHovered && !isLocked) ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
-          background: (isHovered && !isLocked)
-            ? `linear-gradient(160deg, rgba(18,14,32,0.97) 0%, rgba(10,8,18,0.98) 100%)`
-            : undefined,
-          transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1)',
+            ? '0 12px 32px rgba(0,0,0,0.6)'
+            : '0 4px 12px rgba(0,0,0,0.3)',
+          borderColor: (isHovered && !isLocked) ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.06)',
+          background: 'rgba(12, 12, 14, 0.9)',
+          transition: 'all 0.2s ease',
         }}
       >
         {/* Top accent strip */}

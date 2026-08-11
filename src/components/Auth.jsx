@@ -276,23 +276,6 @@ export const Auth = () => {
             }}
           />
 
-          {/* ── Ambient glow behind modal ── */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.4, delay: 0.05 }}
-            style={{
-              position: 'absolute',
-              width: 420,
-              height: 420,
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)',
-              pointerEvents: 'none',
-              zIndex: 1,
-            }}
-          />
-
           {/* ── Modal Card ── */}
           <motion.div
             key="modal"
@@ -305,56 +288,13 @@ export const Auth = () => {
               zIndex: 2,
               width: '100%',
               maxWidth: 400,
-              borderRadius: 24,
+              borderRadius: 16,
               overflow: 'hidden',
-              background: 'linear-gradient(160deg, rgba(18,10,28,0.96) 0%, rgba(8,6,14,0.98) 100%)',
-              boxShadow: `
-                0 0 0 1px rgba(139,92,246,0.15),
-                0 0 0 1px rgba(255,255,255,0.05),
-                0 24px 60px rgba(0,0,0,0.7),
-                0 4px 24px rgba(0,0,0,0.5),
-                inset 0 1px 0 rgba(255,255,255,0.07)
-              `,
+              background: 'rgba(12,12,14,0.95)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              boxShadow: '0 24px 60px rgba(0,0,0,0.4)',
             }}
           >
-            {/* Scanline texture overlay */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 4px)',
-                pointerEvents: 'none',
-                zIndex: 0,
-              }}
-            />
-
-            {/* Top purple glow line */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: '15%',
-                right: '15%',
-                height: 1,
-                background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.8), transparent)',
-                zIndex: 1,
-              }}
-            />
-
-            {/* Corner accent — top right */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                width: 120,
-                height: 120,
-                background: 'radial-gradient(circle at top right, rgba(239,68,68,0.06) 0%, transparent 70%)',
-                pointerEvents: 'none',
-                zIndex: 0,
-              }}
-            />
-
             {/* Close button */}
             <button
               onClick={closeAuthModal}
@@ -392,7 +332,6 @@ export const Auth = () => {
 
               {/* Header */}
               <div style={{ textAlign: 'center', marginBottom: 28 }}>
-                <HeaderOrb />
 
                 {/* Case file tag */}
                 <div
