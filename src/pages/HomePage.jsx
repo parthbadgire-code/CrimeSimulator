@@ -195,7 +195,7 @@ export function HomePage() {
             <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#030508] animate-pulse"></span>
           </div>
           <div>
-            <div className="text-sm font-bold text-white tracking-widest font-crime">ClueConnect</div>
+            <div className="text-sm font-bold text-white tracking-widest uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>ClueConnect</div>
             <div className="text-[9px] text-purple-400/60 font-mono tracking-[0.25em] uppercase">Detective Simulator</div>
           </div>
         </motion.div>
@@ -204,55 +204,37 @@ export function HomePage() {
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1, type: 'spring', damping: 20 }}
-          style={{ display: 'flex', alignItems: 'center', gap: '16px' }}
+          className="flex items-center gap-4"
         >
           <ProfileBadge />
 
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={() => document.getElementById('about-us')?.scrollIntoView({ behavior: 'smooth' })}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '9px 18px', borderRadius: 10,
-              background: 'rgba(244,63,94,0.08)',
-              border: '1px solid rgba(244,63,94,0.22)',
-              color: '#f43f5e', cursor: 'pointer',
-              fontSize: 13, fontWeight: 700,
-              fontFamily: 'JetBrains Mono, monospace',
-              letterSpacing: '0.06em',
-            }}
-          >
-            <Search size={14} />
-            <span className="hidden-sm-down">ABOUT US</span>
-          </motion.button>
+          <div className="hidden md:flex items-center gap-2 p-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+            <motion.button
+              whileHover={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
+              whileTap={{ scale: 0.96 }}
+              onClick={() => document.getElementById('about-us')?.scrollIntoView({ behavior: 'smooth' })}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-slate-300 hover:text-white transition-colors"
+            >
+              <Search size={14} />
+              ABOUT US
+            </motion.button>
 
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={goLeaderboard}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '9px 18px', borderRadius: 10,
-              background: 'rgba(251,191,36,0.08)',
-              border: '1px solid rgba(251,191,36,0.22)',
-              color: '#fbbf24', cursor: 'pointer',
-              fontSize: 13, fontWeight: 700,
-              fontFamily: 'JetBrains Mono, monospace',
-              letterSpacing: '0.06em',
-            }}
-          >
-            <Trophy size={14} />
-            <span className="hidden-sm-down">LEADERBOARD</span>
-          </motion.button>
+            <div className="w-px h-4 bg-white/20 mx-1" />
 
-          <div className="status-chip live hidden-sm-down">
-            <span className="status-dot"></span>
-            <span>LIVE</span>
+            <motion.button
+              whileHover={{ backgroundColor: 'rgba(251,191,36,0.1)' }}
+              whileTap={{ scale: 0.96 }}
+              onClick={goLeaderboard}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-amber-500 hover:text-amber-400 transition-colors"
+            >
+              <Trophy size={14} />
+              LEADERBOARD
+            </motion.button>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/4 border border-white/8">
-            <Zap size={13} className="text-amber-400" />
-            <span className="text-[11px] text-slate-400 font-semibold">Dev Stakes Edition</span>
+
+          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-bold tracking-widest">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            LIVE
           </div>
         </motion.div>
       </header>
@@ -278,12 +260,12 @@ export function HomePage() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
           className="hero-title"
         >
-          <h1 className="text-[72px] md:text-[96px] leading-none tracking-tight mb-4 flex gap-4">
+          <h1 className="text-[72px] md:text-[96px] leading-none tracking-tighter mb-4 flex gap-3 justify-center">
             <motion.span
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3, type: 'spring', damping: 18 }}
-              style={{ fontFamily: "'Special Elite', cursive", color: '#fff' }}
+              style={{ fontFamily: "'Inter', sans-serif", fontWeight: 900, color: '#fff' }}
             >
               CLUE
             </motion.span>
@@ -291,7 +273,7 @@ export function HomePage() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, type: 'spring', damping: 18 }}
-              style={{ fontFamily: "'JetBrains Mono', monospace", color: '#8b5cf6' }}
+              style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, color: '#8b5cf6' }}
             >
               CONNECT
             </motion.span>
