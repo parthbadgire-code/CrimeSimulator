@@ -248,6 +248,36 @@ body::after {
 .font-display { font-family: 'Bebas Neue', 'Impact', sans-serif; letter-spacing: 0.05em; }
 .font-crime { font-family: 'Special Elite', monospace; letter-spacing: 0.02em; }
 
+/* ── 3D Isometric Text Effect ─────────────────────────── */
+.text-3d-isometric {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.05em;
+  transform-style: preserve-3d;
+  text-shadow: 
+    1px 1px 0px #4c1d95,
+    2px 2px 0px #4c1d95,
+    3px 3px 0px #4c1d95,
+    4px 4px 0px #4c1d95,
+    5px 5px 0px #4c1d95,
+    6px 6px 0px #4c1d95,
+    7px 7px 0px #4c1d95,
+    8px 8px 10px rgba(0,0,0,0.8);
+}
+.text-3d-isometric-alt {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.05em;
+  transform-style: preserve-3d;
+  text-shadow: 
+    1px 1px 0px #831843,
+    2px 2px 0px #831843,
+    3px 3px 0px #831843,
+    4px 4px 0px #4c1d95,
+    5px 5px 0px #4c1d95,
+    6px 6px 0px #4c1d95,
+    7px 7px 0px #4c1d95,
+    8px 8px 10px rgba(0,0,0,0.8);
+}
+
 /* ── Mobile Utilities ─────────────────────────────────── */
 @media (max-width: 768px) {
   .hidden-sm-down {
