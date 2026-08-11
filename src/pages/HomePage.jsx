@@ -181,7 +181,7 @@ export function HomePage() {
       </div>
 
       {/* ── HEADER ── */}
-      <header className="relative z-20 flex items-center justify-between px-4 py-4 md:px-8 md:py-5">
+      <header className="relative z-20 flex flex-col md:flex-row items-center justify-between px-4 py-4 md:px-8 md:py-5 gap-4">
         <motion.div
           initial={{ opacity: 0, x: -24 }}
           animate={{ opacity: 1, x: 0 }}
@@ -204,7 +204,7 @@ export function HomePage() {
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1, type: 'spring', damping: 20 }}
-          className="flex items-center gap-4"
+          className="flex flex-wrap items-center justify-center gap-3 md:gap-4"
         >
           <ProfileBadge />
 
@@ -259,25 +259,39 @@ export function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
           className="hero-title"
+          style={{ perspective: '1000px', transformStyle: 'preserve-3d' }}
         >
-          <h1 className="text-[72px] md:text-[96px] leading-none tracking-tighter mb-4 flex gap-3 justify-center">
-            <motion.span
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, type: 'spring', damping: 18 }}
-              style={{ fontFamily: "'Inter', sans-serif", fontWeight: 900, color: '#fff' }}
-            >
-              CLUE
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4, type: 'spring', damping: 18 }}
-              style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, color: '#8b5cf6' }}
-            >
-              CONNECT
-            </motion.span>
-          </h1>
+          <motion.div
+            animate={{ 
+              rotateX: [-3, 3, -3],
+              rotateY: [-4, 4, -4]
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            style={{ transformStyle: 'preserve-3d' }}
+          >
+            <h1 className="text-[56px] md:text-[96px] leading-none mb-6 flex gap-3 justify-center items-center">
+              <motion.span
+                initial={{ opacity: 0, z: -50 }}
+                animate={{ opacity: 1, z: 0 }}
+                transition={{ delay: 0.3, type: 'spring', damping: 18 }}
+                className="text-3d-isometric text-white"
+              >
+                CLUE
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, z: -50 }}
+                animate={{ opacity: 1, z: 0 }}
+                transition={{ delay: 0.4, type: 'spring', damping: 18 }}
+                className="text-3d-isometric-alt text-purple-400"
+              >
+                CONNECT
+              </motion.span>
+            </h1>
+          </motion.div>
 
           <motion.p
             initial={{ opacity: 0 }}
