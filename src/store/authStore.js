@@ -98,6 +98,17 @@ export const useAuthStore = create((set, get) => ({
     return { data, error };
   },
 
+  signInWithGoogle: async () => {
+    if (!supabase) return { error: new Error('Database connection not established') };
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin
+      }
+    });
+    return { data, error };
+  },
+
   signOut: async () => {
     if (supabase) await supabase.auth.signOut();
     set({ user: null, userStats: null });
